@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="260" viewBox="0 0 960 260" role="img" aria-label="Salesforce Deep Debugger">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B4C8C"/>
+      <stop offset="0.55" stop-color="#032D60"/>
+      <stop offset="1" stop-color="#00132E"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00A1E0"/>
+      <stop offset="1" stop-color="#22E3C6"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FBBF24"/>
+      <stop offset="1" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="960" height="260" rx="24" fill="url(#bg)"/>
+
+  <!-- debugger glyph: magnifying glass over a stack trace / bug symbol -->
+  <g transform="translate(70 55)" fill="none" stroke="url(#accent)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- stack trace lines behind the lens -->
+    <line x1="10" y1="18" x2="55" y2="18" stroke="#7FD3F2" stroke-width="4" opacity="0.55"/>
+    <line x1="10" y1="30" x2="45" y2="30" stroke="#7FD3F2" stroke-width="4" opacity="0.4"/>
+    <line x1="10" y1="42" x2="60" y2="42" stroke="#EF4444" stroke-width="4" opacity="0.85"/>
+    <line x1="10" y1="54" x2="38" y2="54" stroke="#7FD3F2" stroke-width="4" opacity="0.4"/>
+
+    <!-- magnifying glass -->
+    <circle cx="58" cy="46" r="26" fill="#04203F" stroke="url(#gold)" stroke-width="6"/>
+    <line x1="77" y1="65" x2="98" y2="86" stroke="url(#gold)" stroke-width="8"/>
+
+    <!-- root-cause marker inside the lens -->
+    <circle cx="58" cy="46" r="5" fill="#EF4444"/>
+  </g>
+
+  <!-- title + tagline -->
+  <text x="248" y="112" font-family="'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="40" font-weight="700" fill="#FFFFFF">Salesforce Deep Debugger</text>
+  <text x="250" y="150" font-family="'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="18" fill="#BCD5F0">Diagnóstico rápido com evidência — do sintoma declarado ao De-Para determinístico.</text>
+
+  <!-- pills -->
+  <g font-family="'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="15" font-weight="600">
+    <rect x="250" y="176" width="110" height="30" rx="15" fill="#04203F" stroke="#22E3C6" stroke-opacity="0.55"/>
+    <text x="305" y="196" fill="#22E3C6" text-anchor="middle">2 níveis</text>
+
+    <rect x="372" y="176" width="150" height="30" rx="15" fill="#04203F" stroke="#00A1E0" stroke-opacity="0.55"/>
+    <text x="447" y="196" fill="#7FD3F2" text-anchor="middle">De-Para determinístico</text>
+
+    <rect x="534" y="176" width="140" height="30" rx="15" fill="#04203F" stroke="#FBBF24" stroke-opacity="0.55"/>
+    <text x="604" y="196" fill="#FDE047" text-anchor="middle">guard.mjs fail-closed</text>
+
+    <rect x="686" y="176" width="150" height="30" rx="15" fill="#04203F" stroke="#8AA9D6" stroke-opacity="0.45"/>
+    <text x="761" y="196" fill="#BCD5F0" text-anchor="middle">23 testes + evals</text>
+  </g>
+</svg>

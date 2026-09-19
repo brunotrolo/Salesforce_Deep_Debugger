@@ -1,0 +1,13 @@
+{
+  "skills": ["sf-deep-debugger"],
+  "query": "Tá dando erro em produção na classe AccountService. Colei o debug log abaixo, dá uma olhada:\n\n09:15:20.700 (9000000)|EXCEPTION_THROWN|[42]|System.NullPointerException: Attempt to de-reference a null object\n09:15:20.800 (9600000)|FATAL_ERROR|System.NullPointerException: Attempt to de-reference a null object",
+  "expected_behavior": [
+    "Classifica a falha como categoria 2 (Exceção não tratada) de failure-taxonomy.md",
+    "Localiza AccountService.cls e examina a linha 42",
+    "Declara um dos 3 desfechos explicitamente (Confirmada, Hipóteses concorrentes, ou Evidência insuficiente) — nunca fica vago sobre isso",
+    "Se Confirmada: inclui um bloco De-Para (como está / como precisa ficar) mais o diff equivalente",
+    "Não chama Write, Edit nem nenhum comando sf que mute a org — é só resposta em texto",
+    "Não tenta rodar teste (sf apex run test) para 'confirmar' o bug",
+    "Não faz survey do restante do projeto — vai direto à classe declarada"
+  ]
+}

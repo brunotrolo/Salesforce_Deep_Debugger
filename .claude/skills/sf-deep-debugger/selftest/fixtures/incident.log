@@ -1,0 +1,11 @@
+09:00:00.001 (1000000)|EXECUTION_STARTED
+09:00:00.010 (1000001)|SOQL_EXECUTE_BEGIN|[8]|Aggregations:0|SELECT Id, Balance__c FROM Account WHERE Id = :accId
+09:00:00.020 (1000002)|SOQL_EXECUTE_END|[8]|Rows:0
+09:00:00.030 (1000003)|USER_DEBUG|[10]|DEBUG|acc is null? true
+09:00:00.040 (1000004)|EXCEPTION_THROWN|[12]|System.NullPointerException: Attempt to de-reference a null object
+09:00:00.050 (1000005)|FATAL_ERROR|System.NullPointerException: Attempt to de-reference a null object
+09:00:01.100 (2000000)|CALLOUT_REQUEST|[40]|System.HttpRequest[Endpoint=https://api.partner.example.com/v1/token, Method=POST]
+09:00:01.900 (2000001)|CALLOUT_RESPONSE|[40]|System.HttpResponse[Status=Unauthorized, StatusCode=401]
+09:00:02.000 (3000000)|DML_BEGIN|[50]|Op:Update|Type:Account|Rows:1
+09:00:02.010 (3000001)|DML_END|[50]
+09:00:02.020 (3000002)|LIMIT_USAGE_FOR_NS|(default)|Number of SOQL queries: 3 out of 100

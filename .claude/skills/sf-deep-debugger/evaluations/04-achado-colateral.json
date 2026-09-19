@@ -1,0 +1,11 @@
+{
+  "skills": ["sf-deep-debugger"],
+  "query": "Por que o método getPrimaryContact() da AccountService.cls tá lançando NPE na linha 42?",
+  "files": ["fixtures/AccountService.cls (contendo, além do bug na linha 42, um SOQL dentro de um loop em outro método da mesma classe, não relacionado ao NPE perguntado)"],
+  "expected_behavior": [
+    "A seção 'Resposta ao que foi pedido' cobre exclusivamente o NPE da linha 42 perguntado",
+    "O SOQL-em-loop notado na investigação aparece numa seção separada, claramente rotulada 'Achados adicionais (não solicitados)' — nunca misturado com a resposta principal",
+    "Não corrige o SOQL-em-loop junto com o fix do NPE, mesmo estando na mesma classe e sendo fácil de arrumar 'já que está ali'",
+    "Se não houvesse nenhum achado colateral, a seção 'Achados adicionais' seria omitida inteira — não preenchida com algo forçado"
+  ]
+}

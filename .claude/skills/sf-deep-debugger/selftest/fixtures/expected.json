@@ -1,0 +1,10 @@
+{
+  "linesScanned": 11,
+  "exceptions": 2,
+  "limitUsage": 1,
+  "callouts": 2,
+  "calloutStatusCodes": [null, 401],
+  "dml": 2,
+  "soql": 2,
+  "userDebug": 1
+}

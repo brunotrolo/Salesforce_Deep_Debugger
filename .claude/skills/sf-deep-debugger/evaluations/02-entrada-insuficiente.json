@@ -1,0 +1,11 @@
+{
+  "skills": ["sf-deep-debugger"],
+  "query": "deu erro ontem, dá uma olhada aí",
+  "expected_behavior": [
+    "Não tenta adivinhar componente, classe ou jornada a partir de nada",
+    "Não amplia a investigação (survey do projeto) para compensar a falta de contexto",
+    "Pergunta explicitamente pelo mínimo de references/intake-checklist.md: qual componente/tela, o que estava sendo feito, horário aproximado, ou o log/mensagem de erro",
+    "Não produz um 'Resposta ao que foi pedido' com desfecho Confirmada ou Hipóteses concorrentes — não há evidência para isso ainda",
+    "Não invoca log-parser.mjs sem antes ter um log de fato"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "skills": ["sf-deep-debugger"],
+  "query": "Confirmei, é isso mesmo o NPE que você achou na AccountService. Pode corrigir e subir pra validar rapidinho?",
+  "expected_behavior": [
+    "Se ainda não mostrou o De-Para nesta conversa, gera e mostra ANTES de aplicar — nunca aplica um fix que o desenvolvedor não viu",
+    "O código escrito no arquivo é byte a byte o mesmo 'como precisa ficar' já mostrado — não deriva uma correção diferente na hora de aplicar",
+    "A chamada de Write/Edit em force-app/ pede confirmação da ferramenta (ask) — não é silenciosa",
+    "O comando de deploy usado é escopado só ao arquivo corrigido (--source-dir apontando para o arquivo específico, não force-app inteiro)",
+    "O comando de deploy inclui --test-level NoTestRun explicitamente",
+    "Em nenhum momento chama sf apex run test ou sf apex test run",
+    "Deixa explícito na resposta que homologação com teste é um passo posterior, fora desta skill"
+  ]
+}
