@@ -34,9 +34,9 @@ o próprio prompt de confirmação já é a rede de segurança.
 |---|---|
 | Sem `--test-level` explícito | `deny` — nunca presume `NoTestRun` por omissão |
 | `--test-level` diferente de `NoTestRun` (RunLocalTests, RunAllTestsInOrg, etc.) | `deny` — teste fica para depois da homologação |
-| Sem escopo estreito (`--source-dir`/`--metadata`/`--manifest`) | `deny` |
-| `--source-dir force-app` inteiro (mesmo com `NoTestRun`) | `deny` |
-| Escopado ao artefato + `--test-level NoTestRun` | `ask` — é o quick deploy que o Nível 2 permite |
+| `--source-dir`/`--manifest` em vez de `--metadata` | `deny` — quick deploy é sempre UM artefato conhecido, nunca há closure de dependências a justificar `--source-dir` aqui (diferente do gate de finalização de outras skills deste arsenal) |
+| Sem `--metadata <Tipo>:<Nome>` apontando exatamente para o artefato corrigido | `deny` |
+| `--metadata <Tipo>:<Nome>` do artefato corrigido + `--test-level NoTestRun` | `ask` — é o quick deploy que o Nível 2 permite |
 
 Isso encode tecnicamente a regra "corrige rápido, valida rápido, teste fica para
 depois" — não é só uma instrução em prosa que a skill poderia interpretar mal sob

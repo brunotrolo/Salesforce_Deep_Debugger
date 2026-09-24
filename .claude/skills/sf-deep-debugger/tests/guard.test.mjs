@@ -29,21 +29,29 @@ test('nao bloqueia SOQL de leitura', () => {
   assert.equal(classifyCommand('sf data query -q "SELECT Id FROM Account LIMIT 1"').blocked, false);
 });
 
-// --- Deploy: so quick deploy escopado + NoTestRun vira 'ask', resto e' 'deny' -
-test('quick deploy escopado com NoTestRun vira ask, nao deny silencioso', () => {
-  const r = classifyCommand('sf project deploy start --source-dir force-app/main/default/classes/X.cls --test-level NoTestRun');
+// --- Deploy: so quick deploy via --metadata + NoTestRun vira 'ask', resto e' 'deny' -
+test('quick deploy via --metadata com NoTestRun vira ask, nao deny silencioso', () => {
+  const r = classifyCommand('sf project deploy start --metadata ApexClass:LogEntryEventBuilder --test-level NoTestRun');
   assert.equal(r.blocked, true);
   assert.equal(r.decision, 'ask');
 });
 test('deploy sem --test-level e negado (nunca presume NoTestRun por omissao)', () => {
-  const r = classifyCommand('sf project deploy start --source-dir force-app/main/default/classes/X.cls');
+  const r = classifyCommand('sf project deploy start --metadata ApexClass:X');
   assert.equal(r.decision, 'deny');
 });
 test('deploy com RunLocalTests e negado (teste fica para depois da homologacao)', () => {
-  const r = classifyCommand('sf project deploy start --source-dir force-app/main/default/classes/X.cls --test-level RunLocalTests');
+  const r = classifyCommand('sf project deploy start --metadata ApexClass:X --test-level RunLocalTests');
   assert.equal(r.decision, 'deny');
 });
-test('deploy de force-app inteiro e negado mesmo com NoTestRun', () => {
+test('deploy com --source-dir e negado mesmo escopado e com NoTestRun (so --metadata vale aqui)', () => {
+  const r = classifyCommand('sf project deploy start --source-dir force-app/main/default/classes/X.cls --test-level NoTestRun');
+  assert.equal(r.decision, 'deny');
+});
+test('deploy com --manifest e negado mesmo com NoTestRun (so --metadata vale aqui)', () => {
+  const r = classifyCommand('sf project deploy start --manifest package-x.xml --test-level NoTestRun');
+  assert.equal(r.decision, 'deny');
+});
+test('deploy de force-app inteiro via --source-dir e negado mesmo com NoTestRun', () => {
   const r = classifyCommand('sf project deploy start --source-dir force-app --test-level NoTestRun');
   assert.equal(r.decision, 'deny');
 });

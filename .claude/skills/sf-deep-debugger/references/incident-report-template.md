@@ -60,9 +60,9 @@ principal — mesmo que pareça relacionado.>
 BYTE A BYTE o mesmo "Como precisa ficar" já mostrado acima — nunca uma nova derivação
 no momento de aplicar.>
 
-**Quick deploy:** `sf project deploy start --source-dir <caminho estreito> --test-level NoTestRun`
-(pede confirmação — nunca roda sozinho). Valida que o fix subiu; não substitui
-homologação.
+**Quick deploy:** `sf project deploy start --metadata <Tipo>:<Nome> --test-level NoTestRun`
+(ex.: `--metadata ApexClass:LogEntryEventBuilder`; pede confirmação — nunca roda
+sozinho). Valida que o fix subiu; não substitui homologação.
 
 **Teste:** não incluído. Homologação com teste de cobertura é um passo posterior,
 depois da confirmação do desenvolvedor de que o quick deploy resolveu — normalmente

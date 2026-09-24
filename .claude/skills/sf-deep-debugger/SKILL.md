@@ -148,12 +148,14 @@ homologação completa:
    propriedade verificável, não uma promessa: o texto que o desenvolvedor aprovou é
    byte a byte o que vai para o arquivo. Escrever diretamente no artefato pede
    confirmação da ferramenta (`guard.mjs` — nunca silencioso).
-2. **Quick deploy, escopado ao artefato corrigido, sem teste** — deploy do menor
-   escopo possível (`--source-dir`/`--metadata` apontando só para o que mudou),
-   sempre com `--test-level NoTestRun`, independente do tipo de artefato (Apex, Flow,
-   LWC, metadado). O objetivo é validar que o fix subiu, não certificá-lo.
-   `guard.mjs` recusa (`deny`) qualquer deploy amplo ou que inclua nível de teste —
-   só o quick deploy escopado + `NoTestRun` chega a pedir confirmação (`ask`).
+2. **Quick deploy, escopado ao artefato corrigido, sem teste** — sempre
+   `--metadata <Tipo>:<Nome>` apontando exatamente para o artefato corrigido (ex.:
+   `sf project deploy start --metadata ApexClass:LogEntryEventBuilder --test-level
+   NoTestRun`), nunca `--source-dir`/`--manifest` — independente do tipo de artefato
+   (Apex, Flow, LWC, metadado). O objetivo é validar que o fix subiu, não certificá-lo.
+   `guard.mjs` recusa (`deny`) qualquer deploy amplo, com `--source-dir`/`--manifest`,
+   ou que inclua nível de teste — só o quick deploy via `--metadata` + `NoTestRun`
+   chega a pedir confirmação (`ask`).
 3. **Teste fica para depois, sempre.** Esta skill **nunca** roda
    `sf apex run test`/`sf apex test run`, em nenhuma fase — nem antes nem depois do
    fix. Homologação com teste de cobertura é passo humano posterior, tipicamente de

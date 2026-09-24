@@ -46,10 +46,13 @@ const DEPLOY_RE = /\bsf\b[\s\S]*\bproject\b[\s\S]*\bdeploy\b/;
 // deploy contradiz "sem teste até homologação" — só NoTestRun é aceitável aqui, e
 // AUSÊNCIA da flag é tratada como "não sei o nível" -> nunca presumir NoTestRun.
 const TEST_LEVEL_FLAG_RE = /--test-level[= ]\s*["']?(\w+)["']?/i;
-// Escopo estreito: aponta para um caminho/manifesto específico, nunca o projeto
-// inteiro nem a raiz de force-app sem subpasta.
-const NARROW_SCOPE_RE = /--(source-dir|metadata|manifest)[= ]\s*\S+/i;
-const WHOLE_FORCE_APP_RE = /--source-dir[= ]\s*["']?force-app\/?["']?(\s|$)/i;
+// Escopo estreito: --metadata <Tipo>:<Nome> apontando exatamente para o artefato
+// corrigido — nunca --source-dir/--manifest. Ao contrário do gate de finalização de
+// outras skills deste arsenal (onde uma closure de dependências pode justificar
+// --source-dir/--manifest), o quick deploy aqui é sempre UM fix conhecido em UM
+// artefato: --metadata é estritamente mais preciso e nunca há exceção de closure.
+const NARROW_SCOPE_RE = /--metadata[= ]\s*\S+/i;
+const SOURCE_DIR_OR_MANIFEST_RE = /--(source-dir|manifest)\b/i;
 
 export function classifyCommand(cmd) {
   const c = String(cmd || '');
@@ -74,14 +77,24 @@ export function classifyCommand(cmd) {
           'humano separado, fora desta skill.',
       };
     }
-    if (!NARROW_SCOPE_RE.test(c) || WHOLE_FORCE_APP_RE.test(c)) {
+    if (SOURCE_DIR_OR_MANIFEST_RE.test(c)) {
       return {
         blocked: true,
         decision: 'deny',
         why:
-          'Deploy sem escopo estreito (--source-dir/--metadata/--manifest apontando só para o ' +
-          'artefato corrigido) ou apontando para force-app/ inteiro. O quick deploy é sempre só ' +
-          'o artefato do fix, nunca o projeto inteiro.',
+          'Deploy com --source-dir/--manifest em vez de --metadata <Tipo>:<Nome> (ex.: ' +
+          '--metadata ApexClass:LogEntryEventBuilder). O quick deploy desta skill é sempre UM ' +
+          'artefato conhecido — nunca há closure de dependências a justificar --source-dir aqui.',
+      };
+    }
+    if (!NARROW_SCOPE_RE.test(c)) {
+      return {
+        blocked: true,
+        decision: 'deny',
+        why:
+          'Deploy sem --metadata <Tipo>:<Nome> apontando exatamente para o artefato corrigido ' +
+          '(ex.: --metadata ApexClass:LogEntryEventBuilder). O quick deploy é sempre só o ' +
+          'artefato do fix, nunca o projeto inteiro.',
       };
     }
     // Escopado + NoTestRun: é o "quick deploy" que o Nível 2 permite — ainda assim
