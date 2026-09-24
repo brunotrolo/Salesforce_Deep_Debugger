@@ -1,0 +1,6 @@
+{
+  "riscos": 3,
+  "referenciasFlagged": ["AccountServiceHelper", "BaseService", "CardHelper"],
+  "tiposSemVarredura": ["Flow"],
+  "naoEncontrados": 0
+}

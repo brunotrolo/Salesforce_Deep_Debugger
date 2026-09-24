@@ -6,12 +6,55 @@ comum** (o palpite errado mais frequente — o que NÃO concluir sem prová-lo).
 
 ## Conteúdo
 
+0. Falha de validação de pacote/Metadata API (pré-triagem — ver seção 0 abaixo)
 1. Governor limit
 2. Exceção não tratada (NPE / DML / tipo)
 3. Callout externo (timeout / 4xx / 5xx)
 4. Permissão (FLS / sharing / CRUD)
 5. Erro de Flow
 6. Erro de LWC (console / Lightning error)
+
+## 0. Falha de validação de pacote/Metadata API (pré-triagem)
+
+Não é uma categoria como as 6 abaixo: não tem checklist de causa raiz próprio. Um
+`componentFailure` de deploy/validação de pacote sempre se resolve de uma de duas
+formas — e qual delas é decidido por conferência exata de lista, não por julgamento:
+
+**Sinal:** o desenvolvedor cola o erro de um deploy/change set rejeitado
+(`sf project deploy report --json`, texto da tela do Setup, ou saída humana do
+`sf project deploy report`) junto com a lista de artefatos que fazem parte do
+pacote.
+
+**Processo:**
+1. **Intake exige as duas evidências** — o erro E a lista de artefatos do pacote. Sem a
+   lista, **pare e pergunte** (ver `references/intake-checklist.md`) — é impossível
+   dizer honestamente "isso faltou no pacote" sem saber o que já está nele.
+2. Rode `scripts/package-validation-parser.mjs --errors <arquivo> --package <arquivo>`.
+   Ele classifica cada falha, por conferência exata de lista (não é julgamento):
+   - **`faltando_no_pacote`** — o componente citado no erro NÃO está na lista do
+     pacote. Causa raiz decidida pelo script; não precisa da checklist de nenhuma
+     categoria abaixo.
+   - **`precisa_diagnostico`** — o componente ESTÁ na lista, então o erro é um
+     defeito real dentro de um artefato incluído, não uma dependência ausente.
+     Aplique a categoria correspondente (1-6) a cada um desses, exatamente como já
+     faz para um bug único — inclusive os 3 desfechos possíveis e os 5 Porquês se
+     necessário.
+3. Rode também `scripts/package-reference-scanner.mjs --package <arquivo> --root
+   <force-app>` — varredura estática local que aponta referências a componentes fora
+   da lista do pacote que o Salesforce ainda não reclamou (a validação é
+   incremental e para na primeira leva de erros). **Isso é sempre risco não
+   confirmado, nunca certeza** — vai só em "Achados adicionais", nunca na resposta
+   principal, nunca corrigido/incluído no pacote sozinho.
+4. Acima de ~15 itens em `precisa_diagnostico`: resuma o padrão predominante em vez
+   de rodar o checklist completo em cada um, e declare isso explicitamente — não é
+   risco de loop (a lista é finita), é risco de estourar o orçamento de contexto
+   numa lista muito grande.
+
+**Anti-padrão comum:** assumir que toda falha citando outro componente significa
+"faltou no pacote" sem checar se ele já está na lista declarada — nesse caso o erro
+é um defeito real dentro de um artefato incluído (categoria 1-6), não uma
+dependência ausente. A conferência de lista do script existe exatamente para não
+depender de leitura apressada disso.
 
 ## 1. Governor limit
 

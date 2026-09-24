@@ -75,6 +75,43 @@ classe/método. Se é o primeiro, diga isso. Se há recorrência, cite os incide
 anteriores por nome de arquivo.>
 ```
 
+## Formato para falha de validação de pacote (múltiplos artefatos)
+
+Quando a entrada é um pacote/change set rejeitado (categoria 0 de
+`failure-taxonomy.md`), a estrutura muda de "um De-Para" para "uma tabela por
+artefato" — mas continua ≤2 blocos no total; a tabela inteira vive dentro de
+"Resposta ao que foi pedido":
+
+```markdown
+# Validação de pacote rejeitada — <N> componentFailures analisados
+
+- **Categoria:** 0. Falha de validação de pacote/Metadata API
+- **Pacote declarado:** <N> artefatos
+
+## Resposta ao que foi pedido
+
+| Componente | Problema (Salesforce) | Classificação | Causa raiz (se diagnosticada) |
+|---|---|---|---|
+| ApexClass:Helper | Dependent class is invalid | **Faltando no pacote** | — (script decidiu por conferência de lista) |
+| ApexTrigger:AccountTrigger | Invalid type: Helper | **Precisa diagnóstico** | Confirmada — ver De-Para abaixo |
+
+<Um bloco De-Para (mesmo formato do template principal) só para as linhas que
+chegaram a "Confirmada". Linhas "Faltando no pacote" não geram De-Para — a ação é
+incluir o artefato no pacote, não corrigir código.>
+
+<Linhas de `naoParseado`, se houver, listadas aqui — nunca classificadas por
+palpite.>
+
+## Achados adicionais (não solicitados)
+
+<Riscos do package-reference-scanner.mjs — componentes referenciados que não estão
+na lista do pacote e que o Salesforce ainda não reclamou (validação incremental
+para na primeira leva). SEMPRE rotulado como risco não confirmado, nunca como erro
+certo — o script não sabe se o componente já existe na org de destino.>
+
+<OMITIR esta seção inteira se a varredura não encontrou nenhum risco.>
+```
+
 ## Exemplo completo (causa raiz Confirmada, sem pedido de correção)
 
 ```markdown

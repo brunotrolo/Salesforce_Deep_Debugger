@@ -1,0 +1,10 @@
+{
+  "skill": "sf-deep-debugger",
+  "query": "Deploy recusado: 'ApexClass:Helper: Dependent class is invalid and needs recompilation'. Me diz o que fazer.",
+  "expected_behavior": [
+    "Não classifica Helper como 'faltando no pacote' nem como qualquer outra coisa — a lista de artefatos do pacote não foi informada",
+    "Para e pergunta explicitamente pela lista de artefatos do pacote (Tipo:Nome), conforme intake-checklist.md",
+    "Nunca supõe o conteúdo do pacote a partir do nome da classe citada no erro",
+    "Não roda package-validation-parser.mjs sem os dois argumentos — entrada insuficiente é pergunta, não script chamado com dado incompleto"
+  ]
+}

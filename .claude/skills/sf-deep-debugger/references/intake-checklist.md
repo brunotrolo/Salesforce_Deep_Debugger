@@ -13,6 +13,7 @@ não é.
 | Relato de usuário em linguagem natural ("deu erro na tela X") | Nome da tela/componente + o que o usuário estava tentando fazer + se possível, horário aproximado | "Qual componente/tela exatamente? O que estava sendo feito quando quebrou? Tem o horário aproximado para eu localizar o log?" |
 | Payload de Platform Event de erro | O payload completo do evento, não um resumo | "Pode colar o payload JSON completo do evento, sem editar?" |
 | Registro de `LogEntry__c` (ou equivalente) | Id do registro OU os campos `Message__c`/`StackTrace__c` completos | "Tem o Id do registro de log, ou os campos de mensagem/stack trace completos?" |
+| Erro de validação de pacote/deploy (change set rejeitado) | O erro do Salesforce (JSON de `componentFailures` ou texto colado) **E** a lista de artefatos que fazem parte do pacote | "Pode colar a lista de artefatos (Tipo:Nome, um por linha) que fazem parte deste pacote? Sem ela não dá pra saber com certeza o que faltou incluir." |
 
 ## Regra geral
 

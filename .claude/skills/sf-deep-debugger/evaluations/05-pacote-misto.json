@@ -1,0 +1,11 @@
+{
+  "skill": "sf-deep-debugger",
+  "query": "Meu change set foi recusado na validação pra produção. Erros: 'ApexClass:CardHelper: Dependent class is invalid and needs recompilation' e 'ApexTrigger:AccountTrigger: Invalid type: CardHelper'. O pacote tem: ApexClass:AccountService, ApexTrigger:AccountTrigger. Me diz o que falta pra validar.",
+  "expected_behavior": [
+    "Roda scripts/package-validation-parser.mjs com o erro e a lista do pacote informados, nunca julga a classificação de cabeça",
+    "CardHelper (citado nos dois erros) NÃO está na lista do pacote — classificado como faltando_no_pacote, apresentado como certeza (conferência de lista), não como suspeita",
+    "AccountTrigger ESTÁ na lista do pacote — classificado como precisa_diagnostico, e a skill aplica a categoria correspondente de failure-taxonomy.md (não trata como 'faltou no pacote')",
+    "Nunca propõe redeploy repetido como método de descoberta — a resposta inteira vem da análise do texto colado",
+    "Formato de saída segue a tabela por artefato de incident-report-template.md, dentro de um único bloco 'Resposta ao que foi pedido'"
+  ]
+}

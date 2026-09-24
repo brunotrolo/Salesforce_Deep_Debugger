@@ -62,7 +62,12 @@ A etapa de causa raiz (Nível 1) tem exatamente três desfechos possíveis: caus
 concorrentes, ou evidência insuficiente. Nunca force o primeiro com evidência de nível
 três. Ver `.claude/skills/sf-deep-debugger/references/failure-taxonomy.md` para o
 anti-padrão específico de cada categoria de falha — cada uma tem um palpite comum
-documentado que NÃO deve ser tomado sem prova.
+documentado que NÃO deve ser tomado sem prova. Isso vale também para a categoria 0
+(falha de validação de pacote): a única parte decidida sem julgamento humano é a
+conferência exata de lista (`faltando_no_pacote` vs. `precisa_diagnostico`, feita
+pelo `package-validation-parser.mjs`) — tudo que `package-reference-scanner.mjs`
+encontra é heurística e nunca vira certeza, só achado adicional rotulado como
+risco não confirmado.
 
 ### 3. Todo dado de log é tratado como potencialmente sensível
 Um debug log de produção pode conter CPF, e-mail, telefone, saldo de cliente. Antes de
@@ -122,10 +127,12 @@ Conteúdo, regras e `README.md` em PT-BR. Falar com o usuário em PT-BR.
     │   └── intake-checklist.md           # mínimo de evidência aceitável por tipo de entrada
     ├── scripts/
     │   ├── log-parser.mjs                # extração determinística do debug log
+    │   ├── package-validation-parser.mjs # categoria 0 — separa faltando_no_pacote de precisa_diagnostico
+    │   ├── package-reference-scanner.mjs # categoria 0 — achados adicionais (risco de próxima rodada)
     │   └── guard.mjs                     # hook PreToolUse — mutação de org + escrita fora do lugar
-    ├── tests/                            # node --test — log-parser + guard (código isolado)
+    ├── tests/                            # node --test — log-parser, os 2 scripts de pacote, guard (código isolado)
     ├── evaluations/                      # cenários comportamentais (skill inteira, revisão manual)
-    └── selftest/                         # fail-closed contra fixture de verdade conhecida
+    └── selftest/                         # fail-closed contra fixture de verdade conhecida (3 scripts)
 docs/incidents/                           # ledger de incidentes investigados (vazio no template)
 ```
 
@@ -133,10 +140,12 @@ docs/incidents/                           # ledger de incidentes investigados (v
 
 - [ ] `node --test .claude/skills/sf-deep-debugger/tests/*.test.mjs` passa 100%
 - [ ] `bash .claude/skills/sf-deep-debugger/selftest/verify-commands.sh` sai com exit 0
-- [ ] Nenhuma mudança em `scripts/log-parser.mjs` sem o self-test correspondente atualizado
+- [ ] `node .claude/skills/sf-deep-debugger/selftest/verify-package-validation.mjs` sai com exit 0
+- [ ] `node .claude/skills/sf-deep-debugger/selftest/verify-package-reference-scan.mjs` sai com exit 0
+- [ ] Nenhuma mudança em `scripts/log-parser.mjs` (ou nos 2 scripts de pacote) sem o self-test correspondente atualizado
 - [ ] Nenhuma escrita fora de `docs/incidents/` proposta como comportamento normal da skill
 - [ ] Toda causa raiz "Confirmada" vem com De-Para; o que o Nível 2 aplica é o mesmo texto
-- [ ] Mudança estrutural em `SKILL.md`/`guard.mjs` revisada contra os 4 cenários de `evaluations/`
+- [ ] Mudança estrutural em `SKILL.md`/`guard.mjs` revisada contra os cenários de `evaluations/`
 - [ ] `description` do frontmatter continua ≤ 1024 caracteres (limite oficial da Anthropic)
 - [ ] Nenhum nome real, endpoint real ou credencial reintroduzido
 - [ ] `README.md`/`AGENTS.md` refletem mudanças estruturais

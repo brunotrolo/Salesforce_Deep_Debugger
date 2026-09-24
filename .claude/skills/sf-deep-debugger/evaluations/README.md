@@ -19,7 +19,10 @@ com esta skill instalada, cole a `query` do cenário, e confira cada item de
 | `02-entrada-insuficiente.json` | Relato vago pede esclarecimento em vez de adivinhar |
 | `03-correcao-explicita.json` | Pedido explícito aplica o mesmo De-Para, quick deploy escopado, nunca roda teste |
 | `04-achado-colateral.json` | Problema notado a mais fica separado, nunca corrigido junto |
+| `05-pacote-misto.json` | Componente faltando no pacote (certeza) vs. componente incluído com defeito real (categoria 1-6) — nunca confunde os dois |
+| `06-pacote-sem-lista.json` | Erro de pacote sem a lista de artefatos pede a lista, nunca supõe o conteúdo do pacote |
+| `07-pacote-achado-colateral.json` | Risco de próxima rodada (varredura estática) fica em "Achados adicionais", rotulado como não confirmado, nunca certeza |
 
-Rode os 4 antes de qualquer mudança estrutural em `SKILL.md` ou `guard.mjs` — são o
+Rode todos antes de qualquer mudança estrutural em `SKILL.md` ou `guard.mjs` — são o
 que evita que uma "melhoria" numa seção quebre silenciosamente o comportamento de
 outra.

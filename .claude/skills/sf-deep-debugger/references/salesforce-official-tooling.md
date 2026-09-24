@@ -46,6 +46,26 @@ sf apexguru scan --file force-app/main/default/classes/<Classe>.cls
 Se o comando falhar por falta de licença, isso não é erro desta skill — declare
 "ferramenta não disponível neste org" e continue com o que a checklist já deu.
 
+## Confirmar um risco de referência de pacote (opcional, nunca padrão)
+
+`scripts/package-reference-scanner.mjs` (categoria 0 de `failure-taxonomy.md`) só
+sabe dizer "este componente é referenciado mas não está na lista do pacote" — nunca
+sabe se ele já existe no org de destino, porque isso só a própria org sabe. Se o
+desenvolvedor tem uma org autenticada à mão e quer confirmar em vez de só
+suspeitar, uma consulta pontual e **read-only** resolve isso:
+
+```bash
+sf data query --query "SELECT Id FROM ApexClass WHERE Name = '<Nome>'" --target-org <alias> --json
+# ou, para outros tipos de metadado:
+sf sobject describe --sobject <Nome> --target-org <alias> --json
+```
+
+Transforma "risco não confirmado" em "confirmado: falta também no destino, incluir
+no pacote" ou "falso positivo, já existe lá". Mesmo padrão das ferramentas acima:
+opcional, nunca o caminho padrão — só quando o desenvolvedor quiser mais certeza
+que a varredura estática sozinha dá. Nunca dispare isso por padrão; a varredura
+estática (rápida, sem rede) já é o suficiente para o relatório na maioria dos casos.
+
 ## O que esta skill NUNCA invoca sozinha
 
 `sf apex log tail` (observação de log ao vivo) não é usado por esta skill — é

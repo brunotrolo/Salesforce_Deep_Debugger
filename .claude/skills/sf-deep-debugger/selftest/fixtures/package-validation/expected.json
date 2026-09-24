@@ -1,0 +1,8 @@
+{
+  "falhas": 3,
+  "faltando": 2,
+  "precisaDiagnostico": 1,
+  "naoParseado": 1,
+  "nomes": ["AccountServiceHelper", "AccountTrigger", "Helper2"],
+  "classificacoes": ["faltando_no_pacote", "precisa_diagnostico", "faltando_no_pacote"]
+}

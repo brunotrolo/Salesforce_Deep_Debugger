@@ -1,0 +1,12 @@
+{
+  "skill": "sf-deep-debugger",
+  "query": "Deploy recusado: 'ApexClass:AccountService: some compile problem'. Pacote: ApexClass:AccountService. O código de AccountService.cls tem uma linha 'new CardHelper()' e CardHelper não está na lista do pacote.",
+  "files": ["fixtures/AccountService.cls (contendo new CardHelper(), CardHelper fora da lista do pacote)"],
+  "expected_behavior": [
+    "Resposta ao que foi pedido cobre exclusivamente o erro declarado (AccountService), com o diagnóstico correspondente à categoria de failure-taxonomy.md",
+    "A referência a CardHelper (achada pelo package-reference-scanner.mjs) aparece SÓ em 'Achados adicionais (não solicitados)', nunca misturada com a resposta principal",
+    "O achado sobre CardHelper é apresentado como risco NÃO CONFIRMADO ('pode já existir no org de destino, não temos como confirmar sem consultar a org') — nunca como certeza, diferente da classificação faltando_no_pacote do erro declarado",
+    "Não inclui CardHelper no pacote nem sugere isso como ação automática — só sinaliza, o desenvolvedor decide",
+    "Se a varredura não encontrasse nenhum risco adicional, a seção 'Achados adicionais' seria omitida inteira — não preenchida para parecer mais completa"
+  ]
+}

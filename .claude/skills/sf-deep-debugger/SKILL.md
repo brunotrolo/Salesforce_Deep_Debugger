@@ -1,15 +1,16 @@
 ---
 name: sf-deep-debugger
 description: >-
-  Diagnostica RAPIDAMENTE um bug/inconsistência declarado por um desenvolvedor — numa
-  jornada, regra de negócio ou componente — a partir do relato, de um debug log ou de
-  uma mensagem de exceção. NUNCA reproduz executando teste (local, sandbox ou
-  produção) nem faz survey amplo — vai direto ao declarado e responde só isso,
-  separado de achado colateral. Se a causa é confirmada, sugere a correção em De-Para
-  (como está / como precisa ficar) — texto apenas. Por padrão só diagnostica; corrige
-  e faz quick deploy escopado, sem teste, só se o desenvolvedor pedir EXPLICITAMENTE.
-  TRIGGER: relato de bug/erro num componente/jornada, stack trace, debug log,
-  "investiga esse erro", "por que isso quebrou", "root cause disso", /deep-debugger.
+  Diagnostica RAPIDAMENTE um bug/inconsistência declarado por um desenvolvedor — de um
+  relato, debug log, exceção, ou pacote/change set rejeitado na validação — num
+  componente/jornada. NUNCA reproduz executando teste (local, sandbox ou produção)
+  nem faz survey amplo — vai direto ao declarado, separado de achado colateral. Se
+  confirmada, sugere a correção em De-Para (como está / como precisa ficar) — texto
+  apenas. Por padrão só diagnostica; corrige e faz quick deploy escopado, sem teste,
+  só se pedido EXPLICITAMENTE.
+  TRIGGER: relato de bug/erro num componente/jornada, stack trace, debug log, erro de
+  validação de pacote/deploy, "investiga esse erro", "por que isso quebrou",
+  "root cause disso", /deep-debugger.
   DO NOT TRIGGER: escrever/rodar teste de cobertura (apex-test-loop), gerar/editar LWC
   do zero (lwc-pattern-generator), migrar callout legado (apex-callouts-developer),
   engenharia reversa completa de org/jornada (sf-archaeologist — este consome a
@@ -106,6 +107,19 @@ Diagnóstico:
    diretamente pelo que foi declarado — consulta `CAPABILITIES_MAP.md` se existir,
    mas não faz survey.
 
+   **Caso especial — pacote/change set rejeitado na validação:** se a entrada é um
+   erro de deploy/validação de pacote (não um bug único), isso é a categoria 0
+   (pré-triagem) de `references/failure-taxonomy.md`, não as 6 acima. Exige as duas
+   evidências no intake (erro + lista de artefatos do pacote — sem a lista, pare e
+   pergunte). Rode `scripts/package-validation-parser.mjs` para separar
+   `faltando_no_pacote` (decidido por conferência exata de lista, sem julgamento) de
+   `precisa_diagnostico` (aplica as 6 categorias normalmente, um item por vez, lista
+   finita — nunca um survey aberto). Rode também
+   `scripts/package-reference-scanner.mjs` para achados adicionais (risco de
+   próxima rodada, sempre rotulado como não confirmado). Formato de saída em
+   `references/incident-report-template.md`, seção "Formato para falha de validação
+   de pacote".
+
 3. **Causa raiz** — aplica a checklist de diagnóstico da categoria contra a evidência
    disponível. Três desfechos possíveis, e só três: confirmada, hipóteses
    concorrentes, ou evidência insuficiente. **Nunca** tenta resolver evidência
@@ -171,8 +185,10 @@ Toda referência a organização, cliente ou artefato usa placeholder genérico
 
 | Arquivo | Quando consultar |
 |---|---|
-| `references/failure-taxonomy.md` | Nível 1, passos 2 e 3 — checklist de diagnóstico por categoria |
+| `references/failure-taxonomy.md` | Nível 1, passos 2 e 3 — checklist de diagnóstico por categoria (0-6) |
 | `references/log-parsing.md` | Formato do Apex debug log e do schema Nebula Logger |
+| `scripts/package-validation-parser.mjs` | Categoria 0 — separa `faltando_no_pacote` de `precisa_diagnostico` |
+| `scripts/package-reference-scanner.mjs` | Categoria 0 — achados adicionais (risco de próxima rodada, nunca certeza) |
 | `references/salesforce-official-tooling.md` | Escalonamento opcional (passo 4) quando o checklist não fechou sozinho |
 | `references/pii-redaction.md` | Antes de qualquer escrita em `docs/incidents/` |
 | `references/incident-report-template.md` | Estrutura da resposta/relatório, formato De-Para |

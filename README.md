@@ -8,7 +8,7 @@
 <p align="center">
   <img src="https://img.shields.io/github/stars/brunotrolo/Salesforce_Deep_Debugger?style=flat-square&color=00A1E0&label=stars" alt="Stars">
   <img src="https://img.shields.io/badge/n%C3%ADveis-2-04E1C2?style=flat-square" alt="2 níveis">
-  <img src="https://img.shields.io/badge/testes-23%20%2B%204%20evals-032D60?style=flat-square" alt="23 testes + 4 evaluations">
+  <img src="https://img.shields.io/badge/testes-41%20%2B%207%20evals-032D60?style=flat-square" alt="41 testes + 7 evaluations">
   <img src="https://img.shields.io/badge/works%20with-Claude%20Code-032D60?style=flat-square" alt="Works with Claude Code">
 </p>
 
@@ -67,7 +67,7 @@ saber a que jornada/domínio o componente falho pertence, sem remapear nada do z
 | Etapa | O que faz |
 |---|---|
 | **Intake** | Normaliza a entrada (relato em linguagem natural, log colado, arquivo, mensagem isolada). Se falta evidência mínima, pergunta em vez de adivinhar (`references/intake-checklist.md`) |
-| **Triagem** | Classifica a falha numa de 6 categorias: governor limit, exceção não tratada, callout externo, permissão (FLS/sharing), erro de Flow, erro de LWC (`references/failure-taxonomy.md`) |
+| **Triagem** | Classifica a falha numa de 6 categorias (governor limit, exceção não tratada, callout externo, permissão FLS/sharing, erro de Flow, erro de LWC) ou na pré-triagem de pacote/change set rejeitado (categoria 0 — separa por conferência exata de lista o que faltou incluir do que é defeito real; `references/failure-taxonomy.md`) |
 | **Causa raiz** | Aplica a checklist de diagnóstico da categoria, com **5 Porquês** para desempatar hipóteses e um scan estático opcional (Salesforce Code Analyzer/Apex Guru) só se a checklist não bastar. Três desfechos, e só três: confirmada, hipóteses concorrentes, ou evidência insuficiente |
 | **Resposta** | Dois blocos, sempre separados — o que foi pedido, e (se houver) o que foi notado a mais. Se a causa foi confirmada, vem junto um **De-Para**: o trecho como está e como precisa ficar, lado a lado, mais o diff equivalente. Só texto — nada é escrito, nenhum deploy acontece |
 | **Correção (Nível 2)** | Aplica exatamente o De-Para já mostrado — nunca deriva um fix novo na hora de aplicar. Quick deploy escopado só ao artefato corrigido, sempre `--test-level NoTestRun`. Teste sempre fica para depois, como passo humano posterior (tipicamente `apex-test-loop`) |
@@ -93,7 +93,7 @@ saber a que jornada/domínio o componente falho pertence, sem remapear nada do z
 ## Pré-requisitos
 
 - **Salesforce CLI (`sf`)** v2+ instalado e autenticado, se for usar o Nível 2 (quick deploy) ou o escalonamento opcional (Code Analyzer/Apex Guru)
-- **Node.js ≥ 18** (para `log-parser.mjs`, `guard.mjs` e os testes — zero dependências externas)
+- **Node.js ≥ 18** (para os scripts determinísticos, `guard.mjs` e os testes — zero dependências externas)
 - Um debug log, mensagem de exceção, ou simplesmente o relato do bug — nenhum é estritamente obrigatório sozinho, mas a Fase de Intake exige o mínimo de `references/intake-checklist.md`
 
 ---
@@ -122,10 +122,12 @@ carregam automaticamente.
 
 ### Antes de usar contra um log real
 
-Rode o self-test uma vez para confirmar que o extrator está íntegro no seu ambiente:
+Rode os selftests uma vez para confirmar que os extratores estão íntegros no seu ambiente:
 
 ```bash
 bash .claude/skills/sf-deep-debugger/selftest/verify-commands.sh
+node .claude/skills/sf-deep-debugger/selftest/verify-package-validation.mjs
+node .claude/skills/sf-deep-debugger/selftest/verify-package-reference-scan.mjs
 ```
 
 ---
@@ -136,9 +138,9 @@ bash .claude/skills/sf-deep-debugger/selftest/verify-commands.sh
 |---|---|---|
 | `skills/sf-deep-debugger/SKILL.md` | Skill principal — os 2 níveis, fronteira com o Archaeologist | Sob demanda, via `/deep-debugger` ou trigger natural |
 | `skills/sf-deep-debugger/references/` | Taxonomia de falhas, parsing de log, redação de PII, template De-Para, escalonamento oficial, mínimo de evidência | Sob demanda, uma seção por vez |
-| `skills/sf-deep-debugger/scripts/` | `log-parser.mjs` (extração determinística) + `guard.mjs` (hook de segurança dos 2 níveis) | `log-parser.mjs` sob comando; `guard.mjs` a cada `Bash`/`Write`/`Edit` |
-| `skills/sf-deep-debugger/selftest/` | Fixture de verdade conhecida + `verify-commands.sh` — controle positivo do extrator | Antes do primeiro uso, e após editar `log-parser.mjs` |
-| `skills/sf-deep-debugger/evaluations/` | 4 cenários comportamentais (query + expected_behavior) — testam a skill inteira, não só o código | Revisão manual, antes de mudança estrutural |
+| `skills/sf-deep-debugger/scripts/` | `log-parser.mjs` (extração determinística) + `package-validation-parser.mjs`/`package-reference-scanner.mjs` (pacote/change set) + `guard.mjs` (hook de segurança dos 2 níveis) | Sob comando; `guard.mjs` a cada `Bash`/`Write`/`Edit` |
+| `skills/sf-deep-debugger/selftest/` | Fixture de verdade conhecida + 3 selftests (`verify-commands.sh`, `verify-package-validation.mjs`, `verify-package-reference-scan.mjs`) — controle positivo dos 3 scripts de extração | Antes do primeiro uso, e após editar qualquer um dos 3 scripts |
+| `skills/sf-deep-debugger/evaluations/` | 7 cenários comportamentais (query + expected_behavior) — testam a skill inteira, não só o código | Revisão manual, antes de mudança estrutural |
 | `rules/karpathy-guidelines.md` | Disciplina comportamental: pense antes de codar, simplicidade, mudanças cirúrgicas, execução orientada a objetivo — contextualizada para diagnóstico de incidente | Início da sessão (sempre válida) |
 | `settings.json` | Least-privilege (sem `bypassPermissions`) + hook `PreToolUse` do `guard.mjs` | Início da sessão |
 
@@ -191,6 +193,7 @@ oficial de autoria de skills da Anthropic antes da última rodada:
 | 2 | Redesenho de segurança | `guard.mjs` por escopo/nível de teste, não por comando bruto; achado e corrigido um `deny` de prefixo que anulava o quick deploy |
 | 3 | Otimização de escopo | De-Para automático no diagnóstico, técnica dos 5 Porquês, escalonamento opcional a ferramenta oficial |
 | 4 | Conformidade oficial Anthropic | `description` excedia 1024 caracteres (corrigida), TOC em referência >100 linhas, padrão Examples e Workflow checklist adicionados, 4 evaluations novas, typo real corrigido |
+| 5 | Diagnóstico de pacote/change set | Categoria 0 (pré-triagem, não uma 7ª categoria peer): `package-validation-parser.mjs` separa por conferência exata de lista o que faltou incluir do que é defeito real; `package-reference-scanner.mjs` acha risco de próxima rodada (validação incremental do Salesforce para na 1ª leva de erros) como achado adicional, sempre rotulado "não confirmado". `guard.mjs`/quick deploy do Nível 2 intocados — a funcionalidade inteira é Nível 1, nunca deploya |
 
 ---
 
@@ -204,8 +207,8 @@ oficial de autoria de skills da Anthropic antes da última rodada:
 
 | | |
 |---|---|
-| **Input** | Um bug/inconsistência declarado por um desenvolvedor — em linguagem natural, debug log, mensagem de exceção isolada, ou payload de erro. Não requer log formal; a skill trabalha com o mínimo declarado, e pergunta pelo que falta em vez de adivinhar. |
-| **O que faz** | Diagnostica em 2 níveis: 1) **Diagnóstico** — classifica a falha em 6 categorias, aplica checklist de causa raiz com evidência (5 Porquês para desempatar, escalonamento opcional a ferramenta oficial), e devolve resposta separada em pedido/achado colateral com sugestão De-Para quando confirmada; 2) **Correção explícita** — só sob pedido, aplica o mesmo De-Para e faz quick deploy escopado sem teste, deixando homologação para depois. |
+| **Input** | Um bug/inconsistência declarado por um desenvolvedor — em linguagem natural, debug log, mensagem de exceção isolada, payload de erro, ou um pacote/change set rejeitado na validação (erro + lista de artefatos do pacote). Não requer log formal; a skill trabalha com o mínimo declarado, e pergunta pelo que falta em vez de adivinhar. |
+| **O que faz** | Diagnostica em 2 níveis: 1) **Diagnóstico** — classifica a falha em 6 categorias (ou na pré-triagem de pacote, categoria 0), aplica checklist de causa raiz com evidência (5 Porquês para desempatar, escalonamento opcional a ferramenta oficial), e devolve resposta separada em pedido/achado colateral com sugestão De-Para quando confirmada; para pacote, entrega uma tabela por artefato (faltando no pacote vs. defeito real) sem nunca redeployar para descobrir; 2) **Correção explícita** — só sob pedido, aplica o mesmo De-Para e faz quick deploy escopado sem teste, deixando homologação para depois. |
 | **Entrega** | Resposta estruturada (causa raiz + evidência + De-Para) no chat, e opcionalmente um relatório persistido em `docs/incidents/<data>-<slug>.md` com PII já redigida — formando um ledger que revela recorrência entre incidentes na mesma classe/método. |
 
 ---

@@ -1,0 +1,4 @@
+ApexClass:AccountServiceHelper: Dependent class is invalid and needs recompilation
+ApexTrigger:AccountTrigger: Invalid type: AccountServiceHelper
+ApexClass  Helper2  Some other compile problem
+linha completamente fora de qualquer formato reconhecido
