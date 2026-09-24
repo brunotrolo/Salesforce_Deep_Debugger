@@ -12,9 +12,6 @@
   <img src="https://img.shields.io/badge/works%20with-Claude%20Code-032D60?style=flat-square" alt="Works with Claude Code">
 </p>
 
-<p align="center">
-  [![skills.sh](https://skills.sh/b/brunotrolo/Salesforce_Deep_Debugger)](https://skills.sh/brunotrolo/Salesforce_Deep_Debugger) [![CI](https://github.com/brunotrolo/Salesforce_Deep_Debugger/actions/workflows/ci.yml/badge.svg)](https://github.com/brunotrolo/Salesforce_Deep_Debugger/actions)
-</p>
 
 Diagnóstico **rápido e preciso** de um bug ou inconsistência declarado por um
 desenvolvedor — numa jornada, numa regra de negócio, num componente.
