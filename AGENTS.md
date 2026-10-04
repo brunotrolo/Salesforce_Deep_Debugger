@@ -136,6 +136,44 @@ Conteúdo, regras e `README.md` em PT-BR. Falar com o usuário em PT-BR.
 docs/incidents/                           # ledger de incidentes investigados (vazio no template)
 ```
 
+## Alinhamento com o framework agentic
+
+Este repositório foi revisado contra o framework de engenharia agêntica (modo plano
+por padrão, delegação a subagente, loop de autoaperfeiçoamento/lições, verificação
+antes de concluir, hooks PostToolUse, integração sistêmica via MCP, segurança de
+permissão). Registro de como cada ponto se aplica aqui — e onde a escolha foi
+deliberadamente diferente do padrão do framework:
+
+- **Subagentes:** este repositório **não tem nenhum subagente no fluxo ativo** — por
+  escolha deliberada, não por omissão. A skill tem o self-test/CI mais forte do
+  arsenal (ver abaixo), que já cobre a verificação que subagentes costumam existir
+  para dar. `.claude/agents/diagnosis-verifier.md` foi adicionado como **proposta
+  aberta**: um subagente (`Read, Grep, Glob`, sem `Bash`/`Write`) que faria segunda
+  opinião independente sobre o De-Para antes de ele ser mostrado ao desenvolvedor. Ele
+  **não está encadeado no fluxo da skill** — esta mudança não o ativa, só o documenta
+  e deixa disponível para adoção futura, se e quando fizer sentido.
+- **Verificação antes de concluir:** já é o ponto mais forte do arsenal aqui, não algo
+  a introduzir. CI real no repositório, `node --test` com 25/25 passando em
+  `.claude/skills/sf-deep-debugger/tests/`, e
+  `.claude/skills/sf-deep-debugger/selftest/verify-commands.sh` (fail-closed contra
+  fixture de verdade conhecida) são a instância mais madura desse princípio em todo o
+  arsenal — qualquer novo mecanismo de verificação deve ser medido contra esse
+  padrão, não substituí-lo.
+- **Self-aperfeiçoamento / lições:** `.claude/LESSONS.md` (novo, append-only) registra
+  correções de comportamento do próprio agente de código neste repositório — data, o
+  que aconteceu, regra resultante. Primeira entrada: o aperto de `NARROW_SCOPE_RE` em
+  `guard.mjs` para exigir só `--metadata` (negando `--source-dir`/`--manifest` mesmo
+  escopados) e a correção do exemplo "válido" equivalente em `tests/guard.test.mjs`.
+- **Hook `PostToolUse`:** considerado e **não adicionado**. `.claude/settings.json` já
+  tem um `PreToolUse` (`guard.mjs`) cobrindo mutação de org/escrita fora de
+  `docs/incidents/`. Um `PostToolUse` rodando a suíte completa a cada `Write`/`Edit`
+  em `scripts/guard.mjs`/`scripts/log-parser.mjs` seria majoritariamente redundante
+  com o que já existe em "Definição de pronto" (rodar o self-test antes de confiar no
+  parser, suíte completa como item do checklist) e com a CI real no push — e, rodando
+  a cada edição incremental (não só ao final), adicionaria latência/ruído sem
+  segurança adicional. Se a disciplina do checklist manual começar a falhar na
+  prática, isso é motivo para reconsiderar, não para adicionar o hook agora.
+
 ## Definição de pronto
 
 - [ ] `node --test .claude/skills/sf-deep-debugger/tests/*.test.mjs` passa 100%
