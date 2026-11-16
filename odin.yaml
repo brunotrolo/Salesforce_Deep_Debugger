@@ -39,6 +39,8 @@ agentes:
   - .claude/agents/diagnosis-verifier.md
 regras:
   - .claude/rules/karpathy-guidelines.md
+politicas:
+  - sf-deep-debugger
 avaliacoes: evals/
 runtime:
   dir: .claude/skills/sf-deep-debugger/scripts
