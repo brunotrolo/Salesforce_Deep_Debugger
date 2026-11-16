@@ -5,18 +5,26 @@ dominio: salesforce
 dono: mantenedor
 descricao: Diagnóstico rápido de um bug declarado. Parte do relato, do debug log, da exceção ou do erro de validação, localiza a causa raiz com evidência e sugere a correção em De-Para.
 intencoes:
-  - investigar este erro
-  - por que isso quebrou em produção
-  - achar a causa raiz desta exceção
-  - analisar este debug log
-  - o deploy foi rejeitado na validação, por quê
-  - tem um bug na jornada, o campo não atualiza
-  - stack trace de NullPointerException na trigger
-  - diagnosticar o erro de governor limit
-  - texto: mapear a org inteira
-    negativa: true
-  - texto: criar a classe de teste
-    negativa: true
+  - "investigar este erro"
+  - "por que isso quebrou em produção"
+  - "achar a causa raiz desta exceção"
+  - "analisar este debug log"
+  - "o deploy foi rejeitado na validação, por quê"
+  - "tem um bug na jornada, o campo não atualiza"
+  - "stack trace de NullPointerException na trigger"
+  - "diagnosticar o erro de governor limit"
+  - "o flow falhou com erro de validação, o que aconteceu"
+  - "segue o log do apex em anexo, onde está o problema"
+  - "o change set voltou com erro de dependência"
+  - "a integração retorna 401 de vez em quando, descobre o motivo"
+  - "esse componente parou de salvar depois do último deploy"
+  - "UNABLE_TO_LOCK_ROW no lote noturno, qual a causa"
+  - "me dá o De-Para da correção desse bug"
+  - "investiga essa falha só com o que eu declarei, sem rodar teste"
+  - { texto: "mapear a org inteira", negativa: true }
+  - { texto: "criar a classe de teste", negativa: true }
+  - { texto: "escrever o backlog dessa reunião", negativa: true }
+  - { texto: "montar o protótipo da jornada", negativa: true }
 perfis_sugeridos:
   - dev
   - qa
