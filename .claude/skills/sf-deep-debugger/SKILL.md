@@ -19,6 +19,9 @@ allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 license: MIT
 ---
 
+> **Primeiro passo (Odin):** rode `odin ensure sf-deep-debugger` e só continue se a resposta tiver `"ok": true`.
+
+
 # Salesforce Deep Debugger
 
 ## Por que este agente existe

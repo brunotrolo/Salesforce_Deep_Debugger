@@ -1,0 +1,40 @@
+# Contrato da skill no Odin (schemas/odin.schema.json). Mantido neste repositório; o catálogo só lê.
+id: sf-deep-debugger
+nome: Deep Debugger
+dominio: salesforce
+dono: mantenedor
+descricao: Diagnóstico rápido de um bug declarado. Parte do relato, do debug log, da exceção ou do erro de validação, localiza a causa raiz com evidência e sugere a correção em De-Para.
+intencoes:
+  - investigar este erro
+  - por que isso quebrou em produção
+  - achar a causa raiz desta exceção
+  - analisar este debug log
+  - o deploy foi rejeitado na validação, por quê
+  - tem um bug na jornada, o campo não atualiza
+  - stack trace de NullPointerException na trigger
+  - diagnosticar o erro de governor limit
+  - texto: mapear a org inteira
+    negativa: true
+  - texto: criar a classe de teste
+    negativa: true
+perfis_sugeridos:
+  - dev
+  - qa
+  - arquiteto
+proximo:
+  - sf-journey-developer
+  - sf-lwc-developer
+  - sf-callouts-developer
+skills:
+  - path: .claude/skills/sf-deep-debugger/SKILL.md
+agentes:
+  - .claude/agents/diagnosis-verifier.md
+regras:
+  - .claude/rules/karpathy-guidelines.md
+avaliacoes: evals/
+runtime:
+  dir: .claude/skills/sf-deep-debugger/scripts
+  node: ">=20"
+  prerequisitos:
+    - node
+    - git
